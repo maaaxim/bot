@@ -14,9 +14,10 @@ def start_bot(autohotpy, event):
     This function simulates a left click
     """
 
+    # @TODO start destroyer in a thread (to enable exit on ESC)
     destr = Destroyer(autohotpy)
     destr.loop()
-1
+
 
 if __name__=="__main__":
 

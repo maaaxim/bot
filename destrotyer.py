@@ -60,7 +60,7 @@ class Destroyer:
         self.autohot_py.PAGE_DOWN.press()
         time.sleep(0.2)
         self.autohot_py.PAGE_DOWN.press()
-        smooth_move(self.autohot_py, 900, 650)
+        smooth_move(self.autohot_py, 900, 650)  # @TODO dynamic
         stroke = InterceptionMouseStroke()
         stroke.state = InterceptionMouseState.INTERCEPTION_MOUSE_LEFT_BUTTON_DOWN
         self.autohot_py.sendToDefaultMouse(stroke)
@@ -70,11 +70,11 @@ class Destroyer:
     def turn(self):
         self.useless_steps += 1
         time.sleep(0.02)
-        smooth_move(self.autohot_py, 300, 500)
+        smooth_move(self.autohot_py, 300, 500)  # @TODO dynamic
         stroke = InterceptionMouseStroke()
         stroke.state = InterceptionMouseState.INTERCEPTION_MOUSE_RIGHT_BUTTON_DOWN
         self.autohot_py.sendToDefaultMouse(stroke)
-        smooth_move(self.autohot_py, 305, 500)
+        smooth_move(self.autohot_py, 305, 500)  # @TODO dynamic
         stroke.state = InterceptionMouseState.INTERCEPTION_MOUSE_RIGHT_BUTTON_UP
         self.autohot_py.sendToDefaultMouse(stroke)
 

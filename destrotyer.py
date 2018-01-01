@@ -34,15 +34,15 @@ class Destroyer:
                 self.autohot_py.N1.press()
                 continue
 
-            # Turn on 90 degrees
-            self.turn()
-            print("turn")
-
-            # We're stuck, go somewhere
             if self.useless_steps > 5:
+                # We're stuck, go somewhere
                 self.useless_steps = 0
                 print("go_somewhere - we're stuck")
                 self.go_somewhere()
+            else:
+                # Turn on 90 degrees
+                self.turn()
+                print("turn")
 
             print("next iteration")
 

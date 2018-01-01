@@ -1,5 +1,5 @@
 from functions import *
-from InterceptionWrapper import InterceptionMouseState,InterceptionMouseStroke
+from InterceptionWrapper import InterceptionMouseState, InterceptionMouseStroke
 import cv2
 import numpy as np
 import sys
@@ -11,44 +11,70 @@ class Destroyer:
         self.autohot_py = autohot_py
         self.step = 0
         self.window_info = get_window_info()
+        self.useless_steps = 0
 
     def loop(self):
         cycle = True
         self.step = 1
         while cycle:
 
-            time.sleep(0.5)
+            time.sleep(0.2)
 
             # Continue attacking if victim is alive
             if self.get_targeted_hp():
+                self.useless_steps = 0
                 print("get_targeted_hp - attack")
                 self.autohot_py.N1.press()
                 continue
 
             # Find and click on the victim
             if self.set_target():
+                self.useless_steps = 0
                 print("set_target - attack")
                 self.autohot_py.N1.press()
                 continue
 
             # Turn on 90 degrees
             self.turn()
+            print("turn")
 
-            print("next step...")
+            # We're stuck, go somewhere
+            if self.useless_steps > 5:
+                self.useless_steps = 0
+                print("go_somewhere - we're stuck")
+                self.go_somewhere()
+
+            print("next iteration")
+
             self.step = self.step + 1
-            if self.step > 500:
+            if self.step > 221500:
                 cycle = False
+
             pass
 
         print("loop finished!")
 
+    def go_somewhere(self):
+        self.autohot_py.PAGE_DOWN.press()
+        time.sleep(0.2)
+        self.autohot_py.PAGE_DOWN.press()
+        time.sleep(0.2)
+        self.autohot_py.PAGE_DOWN.press()
+        smooth_move(self.autohot_py, 900, 650)
+        stroke = InterceptionMouseStroke()
+        stroke.state = InterceptionMouseState.INTERCEPTION_MOUSE_LEFT_BUTTON_DOWN
+        self.autohot_py.sendToDefaultMouse(stroke)
+        stroke.state = InterceptionMouseState.INTERCEPTION_MOUSE_LEFT_BUTTON_UP
+        self.autohot_py.sendToDefaultMouse(stroke)
+
     def turn(self):
+        self.useless_steps += 1
         time.sleep(0.02)
         smooth_move(self.autohot_py, 300, 500)
         stroke = InterceptionMouseStroke()
         stroke.state = InterceptionMouseState.INTERCEPTION_MOUSE_RIGHT_BUTTON_DOWN
         self.autohot_py.sendToDefaultMouse(stroke)
-        smooth_move(self.autohot_py, 303, 500)
+        smooth_move(self.autohot_py, 305, 500)
         stroke.state = InterceptionMouseState.INTERCEPTION_MOUSE_RIGHT_BUTTON_UP
         self.autohot_py.sendToDefaultMouse(stroke)
 
@@ -117,10 +143,10 @@ class Destroyer:
                 continue
             center = round((right[0] + left[0]) / 2)
             center = int(center)
-            smooth_move(self.autohot_py, center + self.window_info["x"], left[1] + 90 + self.window_info["y"])
-            # time.sleep(1)
+            smooth_move(self.autohot_py, center + self.window_info["x"], left[1] + 130 + self.window_info["y"])
+            time.sleep(0.3)
             if self.find_from_targeted(left, right):
-                # time.sleep(0.5)
+                time.sleep(0.3)
                 self.click_target()
                 return True
         return False

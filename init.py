@@ -16,12 +16,14 @@ def start_bot(autohotpy, event):
 
     destr = Destroyer(autohotpy)
     destr.loop()
-
+1
 
 if __name__=="__main__":
 
     # destr = Destroyer(1)
     # destr.loop()
+
+    print("Press \"S\" to start, press \"ESC\" to stop")
 
     auto = AutoHotPy()
     auto.registerExit(auto.ESC, stop_bot)

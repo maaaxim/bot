@@ -13,10 +13,12 @@ class Destroyer:
         self.window_info = get_window_info()
         self.useless_steps = 0
 
-    def loop(self):
-        cycle = True
-        self.step = 1
-        while cycle:
+    def loop(self, stop_event):
+        """
+        main bot logic
+        """
+
+        while not stop_event.is_set():
 
             time.sleep(0.2)
 
@@ -45,16 +47,14 @@ class Destroyer:
                 print("turn")
 
             print("next iteration")
-
-            self.step = self.step + 1
-            if self.step > 221500:
-                cycle = False
-
             pass
 
         print("loop finished!")
 
     def go_somewhere(self):
+        """
+        click to go
+        """
         self.autohot_py.PAGE_DOWN.press()
         time.sleep(0.2)
         self.autohot_py.PAGE_DOWN.press()
@@ -68,6 +68,9 @@ class Destroyer:
         self.autohot_py.sendToDefaultMouse(stroke)
 
     def turn(self):
+        """
+        turn right
+        """
         self.useless_steps += 1
         time.sleep(0.02)
         smooth_move(self.autohot_py, 300, 500)  # @TODO dynamic
@@ -79,6 +82,9 @@ class Destroyer:
         self.autohot_py.sendToDefaultMouse(stroke)
 
     def get_targeted_hp(self):
+        """
+        return victim's hp
+        """
 
         hp_color = [214, 24, 65]
         target_widget_coordinates = {}
@@ -123,7 +129,9 @@ class Destroyer:
         return percent
 
     def set_target(self):
-
+        """
+        find target and click
+        """
         img = getScreen(
             self.window_info["x"],
             self.window_info["y"] + 50,

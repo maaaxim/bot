@@ -100,14 +100,22 @@ def get_screen(x1, y1, x2, y2):
 
 
 def get_target_centrs(img):
+
+    # Hide buff line
     img[0:70, 0:500] = (0, 0, 0)
+
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    ret, th1 = cv2.threshold(gray, 254, 255, cv2.THRESH_TOZERO_INV)
-    ret, th3 = cv2.threshold(th1, 252, 255, cv2.THRESH_BINARY)
+
+    # Find only white text
+    ret, threshold1 = cv2.threshold(gray, 252, 255, cv2.THRESH_BINARY)
+
+    # Morphological transformation
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (80, 5))
-    closed = cv2.morphologyEx(th3, cv2.MORPH_CLOSE, kernel)
-    kernel2 = ones((1, 2), uint8)
-    closed = cv2.erode(closed, kernel2, iterations=2)
+    closed = cv2.morphologyEx(threshold1, cv2.MORPH_CLOSE, kernel)
+    closed = cv2.erode(closed, None, iterations=1)
     closed = cv2.dilate(closed, None, iterations=3)
-    (_, cnts, hierarchy) = cv2.findContours(closed, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    return cnts;
+
+    (_, centers, hierarchy) = cv2.findContours(closed, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    return centers
+

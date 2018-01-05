@@ -18,16 +18,32 @@ class Destroyer:
         main bot logic
         """
 
+        spoiled = False
+
         while not stop_event.is_set():
 
             time.sleep(0.2)
 
             # Continue attacking if victim is alive
-            if self.get_targeted_hp():
+            targeted_hp = self.get_targeted_hp()
+            if targeted_hp > 0:
                 self.useless_steps = 0
-                print("get_targeted_hp - attack")
+
+                if targeted_hp < 40 and not spoiled:
+                    print("spoil")
+                    spoiled = True
+                    self.autohot_py.N2.press()
+                    time.sleep(0.5)
+
+                print("attack the target")
                 self.autohot_py.N1.press()
                 continue
+            elif targeted_hp == 0:
+                print("sweep")
+                self.autohot_py.N3.press()
+                print("target is dead")
+            else:
+                print("no target yet")
 
             # Find and click on the victim
             if self.set_target():
@@ -84,6 +100,7 @@ class Destroyer:
     def get_targeted_hp(self):
         """
         return victim's hp
+        or -1 if there is no target
         """
 
         hp_color = [214, 24, 65]
@@ -111,7 +128,7 @@ class Destroyer:
                 # cv2.rectangle(img, pt, (pt[0] + w, pt[1] + h), (255, 255, 255), 2)
 
         if not target_widget_coordinates:
-            return 0
+            return -1
 
         pil_image_hp = get_screen(
             self.window_info["x"] + target_widget_coordinates['x'] + 16,

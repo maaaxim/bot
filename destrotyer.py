@@ -90,7 +90,7 @@ class Destroyer:
         target_widget_coordinates = {}
         filled_red_pixels = 1
 
-        img = getScreen(
+        img = get_screen(
             self.window_info["x"],
             self.window_info["y"],
             self.window_info["x"] + self.window_info["width"],
@@ -113,7 +113,7 @@ class Destroyer:
         if not target_widget_coordinates:
             return 0
 
-        pil_image_hp = getScreen(
+        pil_image_hp = get_screen(
             self.window_info["x"] + target_widget_coordinates['x'] + 16,
             self.window_info["y"] + target_widget_coordinates['y'] + 31,
             self.window_info["x"] + target_widget_coordinates['x'] + 165,
@@ -132,14 +132,14 @@ class Destroyer:
         """
         find target and click
         """
-        img = getScreen(
+        img = get_screen(
             self.window_info["x"],
             self.window_info["y"] + 50,
             self.window_info["x"] + self.window_info["width"],
             self.window_info["y"] + self.window_info["height"] - 300
         )
 
-        cnts = getTargetCntrs(img)
+        cnts = get_target_centrs(img)
         approxes = []
         hulls = []
         for cnt in cnts:
@@ -164,7 +164,7 @@ class Destroyer:
         template = cv2.imread('template_target2.png', 0)
 
         # print template.shape
-        roi = getScreen(
+        roi = get_screen(
             left[0] - 70 + self.window_info["x"],
             left[1] - 15 + self.window_info["y"] + 50,
             right[0] + 70 + self.window_info["x"],

@@ -92,18 +92,14 @@ def set_window_coordinates(hwnd, window_info):
             win32gui.SetForegroundWindow(hwnd)
 
 
-def getScreen(x1, y1, x2, y2):
+def get_screen(x1, y1, x2, y2):
     box = (x1, y1, x2, y2)
     screen = ImageGrab.grab(box)
     img = array(screen.getdata(), dtype=uint8).reshape((screen.size[1], screen.size[0], 3))
-    # img = cv2.imread('snap__1426174983.png')
-    # cv2.imshow('image',img)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
     return img
 
 
-def getTargetCntrs(img):
+def get_target_centrs(img):
     img[0:70, 0:500] = (0, 0, 0)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     ret, th1 = cv2.threshold(gray, 254, 255, cv2.THRESH_TOZERO_INV)

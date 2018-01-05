@@ -168,6 +168,7 @@ class Destroyer:
                 continue
             center = round((right[0] + left[0]) / 2)
             center = int(center)
+            # @TODO better slide mouse down to find target
             smooth_move(self.autohot_py, center + self.window_info["x"], left[1] + 130 + self.window_info["y"])
             time.sleep(0.3)
             if self.find_from_targeted(left, right):
@@ -178,6 +179,7 @@ class Destroyer:
 
     def find_from_targeted(self, left, right):
 
+        # @TODO ignore red target - it is attacked and dead
         template = cv2.imread('template_target2.png', 0)
 
         # print template.shape

@@ -99,7 +99,7 @@ def get_screen(x1, y1, x2, y2):
     return img
 
 
-def get_target_centrs(img):
+def get_target_centers(img):
 
     # Hide buff line
     # img[0:70, 0:500] = (0, 0, 0)

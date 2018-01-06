@@ -168,7 +168,7 @@ class InterceptionWrapper(object):
         
     def __init__(self):
         # Load DLL into memory.
-        self.interceptionDll = ctypes.WinDLL ("./interception.dll")
+        self.interceptionDll = ctypes.WinDLL ("./lib/interception.dll")
         
         # Setup return types
         self.interceptionDll.interception_create_context.restype = InterceptionContext_p

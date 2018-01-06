@@ -1,6 +1,7 @@
 import threading
-from AutoHotPy import AutoHotPy
-from destrotyer import Destroyer
+from lib.AutoHotPy import AutoHotPy
+from character_classes.destroyer import Destroyer
+from character_classes.spoiler import Spoiler
 
 
 class Singleton(type):
@@ -20,10 +21,7 @@ class Launcher:
 
     __metaclass__ = Singleton
 
-    def __init__(self):
-        """
-        constructor
-        """
+    def __init__(self, character_class):
 
         # create AutoHotPy instance and set stop event handler
         auto_py = AutoHotPy()
@@ -34,7 +32,7 @@ class Launcher:
 
         # init threads
         self.auto_py_thread = threading.Thread(target=self.start_auto_py, args=(auto_py,))
-        self.bot_thread = threading.Thread(target=self.start_destroyer, args=(auto_py, self.bot_thread_stop_event))
+        self.bot_thread = threading.Thread(target=self.start_bot, args=(auto_py, self.bot_thread_stop_event, character_class))
 
         # start threads
         self.auto_py_thread.start()
@@ -47,12 +45,18 @@ class Launcher:
         self.bot_thread_stop_event.set()
 
     @staticmethod
-    def start_destroyer(auto, stop_event):
+    def start_bot(auto, stop_event, character_class):
         """
         start bot loop
         """
-        destroyer = Destroyer(auto)
-        destroyer.loop(stop_event)
+
+        classmap = {
+            'Destroyer': Destroyer,
+            'Spoiler' : Spoiler
+        }
+
+        bot = classmap[character_class](auto)
+        bot.loop(stop_event)
 
     @staticmethod
     def start_auto_py(auto):

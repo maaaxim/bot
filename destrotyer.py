@@ -39,26 +39,35 @@ class Destroyer:
                 self.autohot_py.N1.press()
                 continue
             elif targeted_hp == 0:
-                print("sweep")
-                self.autohot_py.N3.press()
+
+                if spoiled is True:
+                    spoiled = False
+                    print("sweep")
+                    time.sleep(0.3)
+                    self.autohot_py.N3.press()
+                    time.sleep(0.5)
+                    self.autohot_py.N3.press()
+
                 print("target is dead")
+                continue
             else:
                 print("no target yet")
+                # Find and click on the victim
+                if self.set_target():
+                    spoiled = False
+                    self.useless_steps = 0
+                    print("set_target - attack")
+                    self.autohot_py.N1.press()
+                    continue
 
-            # Find and click on the victim
-            if self.set_target():
-                self.useless_steps = 0
-                print("set_target - attack")
-                self.autohot_py.N1.press()
-                continue
-
-            if self.useless_steps > 5:
+            if self.useless_steps > 2:
                 # We're stuck, go somewhere
                 self.useless_steps = 0
                 print("go_somewhere - we're stuck")
                 self.go_somewhere()
             else:
                 # Turn on 90 degrees
+                self.useless_steps += 1
                 self.turn()
                 print("turn")
 
@@ -67,27 +76,30 @@ class Destroyer:
 
         print("loop finished!")
 
+    def set_default_camera(self):
+        self.autohot_py.PAGE_DOWN.press()
+        time.sleep(0.2)
+        self.autohot_py.PAGE_DOWN.press()
+        time.sleep(0.2)
+        self.autohot_py.PAGE_DOWN.press()
+
     def go_somewhere(self):
         """
         click to go
         """
-        self.autohot_py.PAGE_DOWN.press()
-        time.sleep(0.2)
-        self.autohot_py.PAGE_DOWN.press()
-        time.sleep(0.2)
-        self.autohot_py.PAGE_DOWN.press()
+        self.set_default_camera()
         smooth_move(self.autohot_py, 900, 650)  # @TODO dynamic
         stroke = InterceptionMouseStroke()
         stroke.state = InterceptionMouseState.INTERCEPTION_MOUSE_LEFT_BUTTON_DOWN
         self.autohot_py.sendToDefaultMouse(stroke)
         stroke.state = InterceptionMouseState.INTERCEPTION_MOUSE_LEFT_BUTTON_UP
         self.autohot_py.sendToDefaultMouse(stroke)
+        self.set_default_camera()
 
     def turn(self):
         """
         turn right
         """
-        self.useless_steps += 1
         time.sleep(0.02)
         smooth_move(self.autohot_py, 300, 500)  # @TODO dynamic
         stroke = InterceptionMouseStroke()
@@ -168,13 +180,27 @@ class Destroyer:
                 continue
             center = round((right[0] + left[0]) / 2)
             center = int(center)
-            # @TODO better slide mouse down to find target
-            smooth_move(self.autohot_py, center + self.window_info["x"], left[1] + 130 + self.window_info["y"])
-            time.sleep(0.3)
-            if self.find_from_targeted(left, right):
+
+            # smooth_move(self.autohot_py, center + self.window_info["x"], left[1] + 110 + self.window_info["y"])
+            # time.sleep(0.1)
+            # if self.find_from_targeted(left, right):
+            #     self.click_target()
+            #     return True
+
+            # Slide mouse down to find target
+            iterator = 50
+            while iterator < 220:
                 time.sleep(0.3)
-                self.click_target()
-                return True
+                smooth_move(
+                    self.autohot_py,
+                    center + self.window_info["x"],
+                    left[1] + iterator + self.window_info["y"]
+                )
+                if self.find_from_targeted(left, right):
+                    self.click_target()
+                    return True
+                iterator += 20
+
         return False
 
     def find_from_targeted(self, left, right):
@@ -203,7 +229,6 @@ class Destroyer:
             res = cv2.matchTemplate(th2, tp2, cv2.TM_CCORR_NORMED)
             if res.any():
                 min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
-                # print('mxv %.2f' % max_val)
                 if max_val > 0.7:
                     return True
                 else:

@@ -102,7 +102,10 @@ def get_screen(x1, y1, x2, y2):
 def get_target_centrs(img):
 
     # Hide buff line
-    img[0:70, 0:500] = (0, 0, 0)
+    # img[0:70, 0:500] = (0, 0, 0)
+
+    # Hide your name in first camera position (default)
+    img[190:210, 340:470] = (0, 0, 0)
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -112,7 +115,7 @@ def get_target_centrs(img):
     # Morphological transformation
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (80, 5))
     closed = cv2.morphologyEx(threshold1, cv2.MORPH_CLOSE, kernel)
-    closed = cv2.erode(closed, None, iterations=1)
+    closed = cv2.erode(closed, None, iterations=2)
     closed = cv2.dilate(closed, None, iterations=3)
 
     (_, centers, hierarchy) = cv2.findContours(closed, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)

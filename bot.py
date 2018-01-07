@@ -59,7 +59,7 @@ class Bot:
             self.window_info["x"],
             self.window_info["y"],
             self.window_info["x"] + self.window_info["width"],
-            self.window_info["y"] + self.window_info["height"] - 300
+            self.window_info["y"] + self.window_info["height"] - 190
         )
 
         img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -79,10 +79,10 @@ class Bot:
             return -1
 
         pil_image_hp = get_screen(
-            self.window_info["x"] + target_widget_coordinates['x'] + 16,
+            self.window_info["x"] + target_widget_coordinates['x'] + 15,
             self.window_info["y"] + target_widget_coordinates['y'] + 31,
-            self.window_info["x"] + target_widget_coordinates['x'] + 165,
-            self.window_info["y"] + target_widget_coordinates['y'] + 32,
+            self.window_info["x"] + target_widget_coordinates['x'] + 164,
+            self.window_info["y"] + target_widget_coordinates['y'] + 62
         )
 
         pixels = pil_image_hp[0].tolist()
@@ -99,7 +99,7 @@ class Bot:
         """
         img = get_screen(
             self.window_info["x"],
-            self.window_info["y"] + 50,
+            self.window_info["y"],
             self.window_info["x"] + self.window_info["width"],
             self.window_info["y"] + self.window_info["height"] - 300
         )
@@ -117,25 +117,25 @@ class Bot:
             center = round((right[0] + left[0]) / 2)
             center = int(center)
 
-            smooth_move(self.autohot_py, center + self.window_info["x"], left[1] + 110 + self.window_info["y"])
-            time.sleep(0.1)
-            if self.find_from_targeted(left, right):
-                self.click_target()
-                return True
+            # smooth_move(self.autohot_py, center + self.window_info["x"], left[1] + 110 + self.window_info["y"])
+            # time.sleep(0.1)
+            # if self.find_from_targeted(left, right):
+            #     self.click_target()
+            #     return True
 
-            # # Slide mouse down to find target
-            # iterator = 50
-            # while iterator < 220:
-            #     time.sleep(0.3)
-            #     smooth_move(
-            #         self.autohot_py,
-            #         center + self.window_info["x"],
-            #         left[1] + iterator + self.window_info["y"]
-            #     )
-            #     if self.find_from_targeted(left, right):
-            #         self.click_target()
-            #         return True
-            #     iterator += 20
+            # Slide mouse down to find target
+            iterator = 50
+            while iterator < 150:
+                time.sleep(0.3)
+                smooth_move(
+                    self.autohot_py,
+                    center + self.window_info["x"],
+                    left[1] + iterator + self.window_info["y"]
+                )
+                if self.find_from_targeted(left, right):
+                    self.click_target()
+                    return True
+                iterator += 30
 
         return False
 
@@ -146,10 +146,10 @@ class Bot:
 
         # print template.shape
         roi = get_screen(
-            left[0] - 70 + self.window_info["x"],
-            left[1] - 15 + self.window_info["y"] + 50,
-            right[0] + 70 + self.window_info["x"],
-            right[1] + 12 + self.window_info["y"] + 50
+            self.window_info["x"],
+            self.window_info["y"],
+            self.window_info["x"] + self.window_info["width"],
+            self.window_info["y"] + self.window_info["height"] - 300
         )
 
         roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)

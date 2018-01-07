@@ -93,7 +93,7 @@ def set_window_coordinates(hwnd, window_info):
 
 
 def get_screen(x1, y1, x2, y2):
-    box = (x1, y1, x2, y2)
+    box = (x1 + 8, y1 + 30, x2 - 8, y2)
     screen = ImageGrab.grab(box)
     img = array(screen.getdata(), dtype=uint8).reshape((screen.size[1], screen.size[0], 3))
     return img
@@ -105,20 +105,22 @@ def get_target_centers(img):
     # img[0:70, 0:500] = (0, 0, 0)
 
     # Hide your name in first camera position (default)
-    img[190:210, 340:470] = (0, 0, 0)
-
+    img[210:230, 350:440] = (0, 0, 0)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # cv2.imwrite('1_gray_img.png', gray)
 
     # Find only white text
     ret, threshold1 = cv2.threshold(gray, 252, 255, cv2.THRESH_BINARY)
+    # cv2.imwrite('2_threshold1_img.png', threshold1)
 
     # Morphological transformation
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (80, 5))
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 5))
     closed = cv2.morphologyEx(threshold1, cv2.MORPH_CLOSE, kernel)
-    closed = cv2.erode(closed, None, iterations=2)
-    closed = cv2.dilate(closed, None, iterations=3)
+    # cv2.imwrite('3_morphologyEx_img.png', closed)
+    closed = cv2.erode(closed, kernel, iterations=1)
+    # cv2.imwrite('4_erode_img.png', closed)
+    closed = cv2.dilate(closed, kernel, iterations=1)
+    # cv2.imwrite('5_dilate_img.png', closed)
 
     (_, centers, hierarchy) = cv2.findContours(closed, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
     return centers
-

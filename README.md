@@ -1,5 +1,11 @@
 # Lineage 2 Interlude bot PROTOTYPE
 
+About:
+https://habrahabr.ru/post/346258/
+
+Video:
+[![Youtube video](https://img.youtube.com/vi/vlV1oMwDLpQ/0.jpg)](https://www.youtube.com/watch?v=vlV1oMwDLpQ)
+
 @TODO
 1. Recognize NPC's and other players
 2. Get self HP

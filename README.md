@@ -1,9 +1,9 @@
 # Lineage 2 Interlude bot PROTOTYPE
 
-About:
+About:__
 https://habrahabr.ru/post/346258/
 
-Video:
+Video:__
 [![Youtube video](https://img.youtube.com/vi/vlV1oMwDLpQ/0.jpg)](https://www.youtube.com/watch?v=vlV1oMwDLpQ)
 
 @TODO
